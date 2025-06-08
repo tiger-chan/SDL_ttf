@@ -23,19 +23,13 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    const lib = b.addLibrary(.{
+    const sdl_ttf = b.addLibrary(.{
         .linkage = preferred_linkage,
         .name = "SDL_ttf",
         .root_module = lib_mod,
     });
 
-    b.installArtifact(lib);
-
-    const sdl_ttf = b.addStaticLibrary(.{
-        .name = "c_sdl_ttf",
-        .target = target,
-        .optimize = optimize,
-    });
+    b.installArtifact(sdl_ttf);
 
     sdl_ttf.linkLibC();
     sdl_ttf.addIncludePath(b.path("include/"));
@@ -50,12 +44,13 @@ pub fn build(b: *std.Build) void {
         .files = srcs,
         .flags = &sdl_ttf_flags,
     });
+
     if (use_freetype) {
         const freetype_dep = b.dependency("freetype", .{
             .target = target,
             .optimize = optimize,
         });
-        lib.linkLibrary(freetype_dep.artifact("freetype"));
+        sdl_ttf.linkLibrary(freetype_dep.artifact("freetype"));
     }
 
     if (use_harfbuzz) {
@@ -63,7 +58,7 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
         });
-        lib.linkLibrary(harfbuzz_dep.artifact("harfbuzz"));
+        sdl_ttf.linkLibrary(harfbuzz_dep.artifact("harfbuzz"));
         lib_mod.addCMacro("TTF_USE_HARFBUZZ", "1");
     }
 
@@ -74,7 +69,6 @@ pub fn build(b: *std.Build) void {
     const sdl3_mod = sdl3_dep.module("sdl");
     lib_mod.addImport("sdl", sdl3_mod);
 
-    lib.addIncludePath(sdl3_dep.path("include"));
     sdl_ttf.addIncludePath(sdl3_dep.path("include"));
 
     sdl_ttf.linkSystemLibrary2("freetype2", .{ .use_pkg_config = .force });
