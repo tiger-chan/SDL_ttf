@@ -6,7 +6,7 @@
     .dependencies = .{
         .sdl = .{
             .url = "https://github.com/tiger-chan/SDL/archive/refs/heads/main.tar.gz",
-            .hash = "sdl-0.2.2+3.2.12-7uIn9DqifwG6CUjWDpij2_mkPwe212qgBdUSzfXzHDma",
+            .hash = "sdl-0.2.2+3.2.12-7uIn9OkNgAE50h5kQaK7kBpBjfI908W5Q0kJXb0r6FnZ",
         },
         .freetype = .{
             .url = "https://github.com/allyourcodebase/freetype/archive/refs/heads/main.tar.gz",
